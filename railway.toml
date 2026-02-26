@@ -1,0 +1,3 @@
+[build]
+  # Força o Railway a usar npm install
+  installCommand = "npm install"
