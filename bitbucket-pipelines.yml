@@ -1,0 +1,76 @@
+definitions:
+  steps:
+    - step: &build-prod
+        name: Build dashboard
+        image: node:10
+        deployment: prod
+        caches:
+          - node
+        script:
+          # build
+          - npm install
+          - npm run build
+        artifacts:
+          - dist/**
+
+    - step: &push-run-prod
+        name: Run container
+        image: google/cloud-sdk:alpine
+        services:
+          - docker
+        caches:
+          - docker
+        script:
+          - export IMAGE_NAME=gcr.io/$PROD_GCLOUD_PROJECT/$BITBUCKET_REPO_SLUG:$BITBUCKET_COMMIT-$BITBUCKET_BRANCH
+          # Build docker image
+          - docker build -t ${IMAGE_NAME} --build-arg GIT_COMMIT=$BITBUCKET_COMMIT .
+          # Extract Google Cloud API Key
+          - echo $PROD_GCLOUD_API_KEYFILE | base64 -d > ./gcloud-api-key.json
+          # Push docker image to Container Registry
+          - cat ./gcloud-api-key.json | docker login -u _json_key --password-stdin https://gcr.io
+          - docker push ${IMAGE_NAME}
+          # Deploy to Cloud Run
+          - gcloud auth activate-service-account --key-file gcloud-api-key.json
+          - gcloud run deploy $BITBUCKET_REPO_SLUG-$BITBUCKET_BRANCH --platform=managed --allow-unauthenticated --image=$IMAGE_NAME --port=$CONTAINER_PORT --memory=$GCLOUD_RUN_MEMORY --timeout=$GCLOUD_RUN_TIMEOUT --region=$GCLOUD_RUN_REGION --max-instances=$GCLOUD_RUN_MAX_INSTANCES --project=$PROD_GCLOUD_PROJECT
+    - step: &build-dev
+        name: Build dashboard
+        image: node:10
+        deployment: dev
+        caches:
+          - node
+        script:
+          # build
+          - npm install
+          - npm run build
+        artifacts:
+          - dist/**
+
+    - step: &push-run-dev
+        name: Run container
+        image: google/cloud-sdk:alpine
+        services:
+          - docker
+        caches:
+          - docker
+        script:
+          - export IMAGE_NAME=gcr.io/$DEV_GCLOUD_PROJECT/$BITBUCKET_REPO_SLUG:$BITBUCKET_COMMIT-$BITBUCKET_BRANCH
+          # Build docker image
+          - docker build -t ${IMAGE_NAME} --build-arg GIT_COMMIT=$BITBUCKET_COMMIT .
+          # Extract Google Cloud API Key
+          - echo $DEV_GCLOUD_API_KEYFILE | base64 -d > ./gcloud-api-key.json
+          # Push docker image to Container Registry
+          - cat ./gcloud-api-key.json | docker login -u _json_key --password-stdin https://gcr.io
+          - docker push ${IMAGE_NAME}
+          # Deploy to Cloud Run
+          - gcloud auth activate-service-account --key-file gcloud-api-key.json
+          - gcloud run deploy $BITBUCKET_REPO_SLUG-$BITBUCKET_BRANCH --platform=managed --allow-unauthenticated --image=$IMAGE_NAME --port=$CONTAINER_PORT --memory=$GCLOUD_RUN_MEMORY --timeout=$GCLOUD_RUN_TIMEOUT --region=$GCLOUD_RUN_REGION --max-instances=$GCLOUD_RUN_MAX_INSTANCES --project=$DEV_GCLOUD_PROJECT
+
+
+pipelines:
+  branches:
+    master:
+      - step: *build-prod
+      - step: *push-run-prod
+    dev:
+      - step: *build-dev
+      - step: *push-run-dev
