@@ -4,6 +4,7 @@
   "description": "A Vue.js project",
   "author": "Thiago Yukio <thiago@espressolabs.com.br>",
   "private": true,
+  "overrides": { "node-sass": "npm:sass@^1.69.0" },
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
