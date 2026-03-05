@@ -16,6 +16,10 @@ RUN npm run build
 # EXPOSE 80
 # CMD ["nginx", "-g", "daemon off;"]
 
+# Use the Caddy image
+FROM caddy
+# Create and change to the app directory.
+WORKDIR /app
 # Copy Caddyfile to the container image.
 COPY Caddyfile ./
 # Copy local code to the container image.
