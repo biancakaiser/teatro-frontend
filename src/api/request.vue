@@ -1,6 +1,6 @@
 <script>
 let axios = require("axios");
-let serverUrl = process.env.API_URL || "http://localhost:8090";
+let serverUrl = process.env.API_URL || 'https://api.teatromusicado.com.br';
 
 export default {
   send: async function(apiName, command, data) {
