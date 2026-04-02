@@ -244,7 +244,7 @@
                       type="text"
                       class="form-control"
                       v-model="settingParameters.startDate"
-                      v-validate="'date_format:DD/MM/YYYY'"
+                      v-validate="'date_format:dd/MM/yyyy'"
                       v-mask="['##/##/####']"
                       placeholder="DD/MM/AAAA"
                     >
@@ -255,7 +255,7 @@
                       type="text"
                       class="form-control"
                       v-model="settingParameters.endDate"
-                      v-validate="'date_format:DD/MM/YYYY'"
+                      v-validate="'date_format:dd/MM/yyyy'"
                       v-mask="['##/##/####']"
                       placeholder="DD/MM/AAAA"
                     >
@@ -272,10 +272,10 @@
                   <button v-if="showButton" class="button" style="border-radius: 5px;"  @click.prevent="clearData">
                     Limpar Filtros
                   </button>
-                  <div v-if="!showButton" class="spinner">
-                    <rotate-square2 id="spinner"></rotate-square2>
-                  </div>
                 </div>
+              </div>
+              <div v-if="!showButton" class="spinner">
+                <rotate-square2 id="spinner"></rotate-square2>
               </div>
             </form>
           </div>
@@ -703,7 +703,7 @@ import swal from "sweetalert2";
 // Vue.use(VueSweetalert2);
 Vue.use(VeeValidate);
 
-const getISODate = slashDate =>
+const getISODate = slashDate => 
   slashDate ? moment(slashDate, "DD-MM-YYYY").format("YYYY-MM-DD") : null;
 
 export default {
@@ -915,9 +915,6 @@ export default {
   },
   computed: {
     filteredPresentations() {
-      console.log("TCL: filteredPresentations -> this.presentations", this.presentations)
-
-
       return this.presentations.filter(presentation => !!presentation);
     },
     presentationsByCompany() {
