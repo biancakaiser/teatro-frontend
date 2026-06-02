@@ -596,11 +596,11 @@
                   <th>Título da Peça</th>
                   <th>Gênero</th>
                   <th>Nac. Peça.</th>
-                  <th>Idioma</th>
                   <th>Companhia</th>
                   <th>Nac. Cia.</th>
                   <th>Autores</th>
                   <th>Ano</th>
+                  <th>Idioma</th>
                   <th>Teatro</th>
                   <th style="width: 105px;">Tipo Espet.</th>
                   <th>Rep.</th>
@@ -666,6 +666,7 @@
                           </ul>
                         </td>
                         <td>{{ presentation.date }}</td>
+                        <td>{{ presentation.language }}</td>
                         <td>
                           <router-link
                             :to="`/teatro/${presentation.theaterId}`"
@@ -1024,7 +1025,7 @@ export default {
             id: presentation.playId,
             name: presentation.playName,
             nationality: presentation.playNationality,
-            language: presentation.playLanguage,
+            // language: presentation.playLanguage,
             genre: presentation.playGenre,
             totalPresentations: 0,
             companies: []
@@ -1049,6 +1050,7 @@ export default {
         company.presentations.push({
           id: presentation.presentationId,
           date: presentation.presentationDate,
+          language: presentation.language,
           theater: presentation.theaterName,
           theaterId: presentation.theaterId,
           kind: presentation.kind,
@@ -1066,6 +1068,7 @@ export default {
             {
               id: null,
               date: null,
+              language: null,
               theater: "",
               sessionsNumber: "",
               theaterId: "",
@@ -1090,6 +1093,7 @@ export default {
               let data = {
                 id: presentation.id,
                 date: presentation.date,
+                language: presentation.language,
                 theater: presentation.theater,
                 sessionsNumber: presentation.sessionsNumber,
                 theaterId: presentation.theaterId,
