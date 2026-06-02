@@ -345,12 +345,12 @@
                   <th>Data</th>
                   <th>Teatro</th>
                   <th>Companhia</th>
-                  <th style="width: 105px;">Tipo Espet.</th>
                   <th>Nac. Cia.</th>
-                  <th>Título da Peça</th>
+                  <th>Idioma Espet.</th>
+                  <th>Tipo Espet.</th>
                   <th>Rep.</th>
+                  <th>Título da Peça</th>
                   <th>Gênero</th>
-                  <th>Idioma</th>
                   <th>Nac. Peça.</th>
                   <th>Autores</th>
                 </tr>
@@ -370,8 +370,10 @@
                       target="_blank"
                     >{{ presentation.companyName }}</router-link>
                   </td>
-                  <td style="width: 105px;">{{ presentation.kind | formatSettingKind}}</td>
                   <td>{{ presentation.companyNationality }}</td>
+                  <td>{{ presentation.language }}</td>
+                  <td>{{ presentation.kind | formatSettingKind}}</td>
+                  <td>{{ presentation.sessionsNumber }}</td>
                   <td>
                     <p v-if="!presentation.playVisible" class="mb-0">{{ presentation.playName }}</p>
                     <router-link
@@ -380,9 +382,7 @@
                       target="_blank"
                     >{{ presentation.playName }}</router-link>
                   </td>
-                  <td>{{ presentation.sessionsNumber }}</td>
                   <td>{{ presentation.playGenre }}</td>
-                  <td>{{ presentation.language }}</td>
                   <td>{{ presentation.playNationality }}</td>
 
                   <td style="padding-left: 2rem;">
@@ -458,13 +458,14 @@
                 <tr>
                   <th>Companhia</th>
                   <th>Nac. Cia.</th>
+                  <th>Idioma Espet.</th>
                   <th>Título da Peça</th>
                   <th>Gênero</th>
-                  <th>Idioma</th>
+                  <th>Nac. Peça.</th>
                   <th>Autores</th>
-                  <th>Data</th>
                   <th>Teatro</th>
-                  <th style="width: 105px;">Tipo Espet.</th>
+                  <th>Tipo Espet.</th>
+                  <th>Data</th>
                   <th>Rep.</th>
                 </tr>
               </thead>
@@ -491,6 +492,11 @@
                           company.nationality }}
                         </td>
 
+                        <td
+                          v-if="presentationIndex === 0"
+                          :rowspan="play.presentations.length"
+                        >{{ presentation.language }}</td>
+
                         <td v-if="presentationIndex === 0" :rowspan="play.presentations.length">
                           <router-link :to="`/peca/${play.id}`" target="_blank">{{ play.name }}</router-link>
                         </td>
@@ -503,7 +509,7 @@
                         <td
                           v-if="presentationIndex === 0"
                           :rowspan="play.presentations.length"
-                        >{{ play.language }}</td>
+                        >{{ play.nationality }}</td>
 
                         <td
                           v-if="presentationIndex === 0"
@@ -523,14 +529,14 @@
                           </ul>
                         </td>
 
-                        <td>{{ presentation.date }}</td>
                         <td>
                           <router-link
-                            :to="`/teatro/${presentation.theaterId}`"
-                            target="_blank"
+                          :to="`/teatro/${presentation.theaterId}`"
+                          target="_blank"
                           >{{ presentation.theater }}</router-link>
                         </td>
                         <td>{{ presentation.kind | formatSettingKind }}</td>
+                        <td>{{ presentation.date }}</td>
                         <td>{{ presentation.sessionsNumber }}</td>
                       </tr>
                       <tr v-if="!filteredPresentations.length">
@@ -596,13 +602,13 @@
                   <th>Título da Peça</th>
                   <th>Gênero</th>
                   <th>Nac. Peça.</th>
+                  <th>Autores</th>
                   <th>Companhia</th>
                   <th>Nac. Cia.</th>
-                  <th>Autores</th>
-                  <th>Ano</th>
                   <th>Idioma</th>
                   <th>Teatro</th>
-                  <th style="width: 105px;">Tipo Espet.</th>
+                  <th>Tipo Espet.</th>
+                  <th>Ano</th>
                   <th>Rep.</th>
                 </tr>
               </thead>
@@ -632,23 +638,6 @@
                           play.nationality }}
                         </td>
                         <td
-                          v-if="companyIndex === 0 && presentationIndex === 0"
-                          :rowspan="play.linesTable"
-                        >
-                          {{
-                          play.language }}
-                        </td>
-                        <td v-if="presentationIndex === 0" :rowspan="company.presentations.length">
-                          <router-link
-                            :to="`/companhia/${company.id}`"
-                            target="_blank"
-                          >{{ company.name }}</router-link>
-                        </td>
-                        <td
-                          v-if="presentationIndex === 0"
-                          :rowspan="company.presentations.length"
-                        >{{ company.nationality }}</td>
-                        <td
                           v-if="presentationIndex === 0"
                           :rowspan="company.presentations.length"
                           style="padding-left: 2rem;"
@@ -665,15 +654,28 @@
                             </li>
                           </ul>
                         </td>
-                        <td>{{ presentation.date }}</td>
-                        <td>{{ presentation.language }}</td>
+                        <td v-if="presentationIndex === 0" :rowspan="company.presentations.length">
+                          <router-link
+                            :to="`/companhia/${company.id}`"
+                            target="_blank"
+                          >{{ company.name }}</router-link>
+                        </td>
+                        <td
+                          v-if="presentationIndex === 0"
+                          :rowspan="company.presentations.length"
+                        >{{ company.nationality }}</td>
+                        <td
+                          v-if="presentationIndex === 0"
+                          :rowspan="company.presentations.length"
+                        >{{ presentation.language }}</td>
                         <td>
                           <router-link
-                            :to="`/teatro/${presentation.theaterId}`"
-                            target="_blank"
+                          :to="`/teatro/${presentation.theaterId}`"
+                          target="_blank"
                           >{{ presentation.theater }}</router-link>
                         </td>
                         <td>{{ presentation.kind | formatSettingKind }}</td>
+                        <td>{{ presentation.date }}</td>
                         <td>{{ presentation.sessionsNumber }}</td>
                       </tr>
                       <tr v-if="!filteredPresentations.length">
@@ -944,7 +946,6 @@ export default {
               name: presentation.playName,
               nationality: presentation.playNationality,
               genre: presentation.playGenre,
-              language: presentation.language,
               jobs: presentation.conceptions,
               settingId: presentation.settingId,
               presentations: []
@@ -954,6 +955,7 @@ export default {
           play.presentations.push({
             id: presentation.presentationId,
             date: presentation.presentationDate,
+            language: presentation.language,
             theater: presentation.theaterName,
             theaterId: presentation.theaterId,
             sessionsNumber: presentation.sessionsNumber,
@@ -973,6 +975,7 @@ export default {
             {
               id: null,
               date: null,
+              language: "",
               theater: "",
               sessionsNumber: "",
               theaterId: "",
@@ -998,6 +1001,7 @@ export default {
               let data = {
                 id: presentation.id,
                 date: presentation.date,
+                language: presentation.language,
                 theater: presentation.theater,
                 sessionsNumber: presentation.sessionsNumber,
                 theaterId: presentation.theaterId,
@@ -1025,7 +1029,6 @@ export default {
             id: presentation.playId,
             name: presentation.playName,
             nationality: presentation.playNationality,
-            // language: presentation.playLanguage,
             genre: presentation.playGenre,
             totalPresentations: 0,
             companies: []
@@ -1068,7 +1071,7 @@ export default {
             {
               id: null,
               date: null,
-              language: null,
+              language: "",
               theater: "",
               sessionsNumber: "",
               theaterId: "",
